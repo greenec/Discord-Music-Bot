@@ -6,16 +6,17 @@ from discord.utils import get
 from dotenv import load_dotenv
 import os
 
+
 bot = commands.Bot(command_prefix='-')
 
 
 @bot.command()
 async def play(ctx):
-	# grab the user who sent the command
+	# get the user who sent the command
     user = ctx.message.author
     channel = user.voice.channel
 
-    # only play music if user is in a voice channel
+    # only play music if the user is in a voice channel
     if channel:
         filename = None
         if 'beat' in ctx.message.content:
@@ -32,19 +33,30 @@ async def stop(ctx):
         voice.stop()
 
 
-async def play_local_file_async(file_name, channel, guild): 
+async def join_voice_channel_async(guild, channel)
     voice = get(bot.voice_clients, guild=guild)
     if voice and voice.is_connected():
         await voice.move_to(channel)
     else:
         voice = await channel.connect()
+    return voice
+
+
+async def play_local_file_async(file_name, channel, guild): 
+	voice = await join_voice_channel_async(guild, channel)
 
     source = FFmpegOpusAudio(file_name)
     voice.play(source)
 
 
-load_dotenv()
-token = os.getenv('DISCORD_TOKEN')
+def main():
+    # load the .env file to get the bot's token (so it isn't checked into git)
+    load_dotenv()
+    token = os.getenv('DISCORD_TOKEN')
 
-bot.run(token)
+    bot.run(token)
+
+
+if __name__ == "__main__":
+    main()
 
