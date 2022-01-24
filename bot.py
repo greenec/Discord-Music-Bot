@@ -1,36 +1,45 @@
 
 import asyncio
-import discord
+from discord import FFmpegPCMAudio
 from discord.ext import commands
+from discord.utils import get
 
 bot = commands.Bot(command_prefix='-')
 
-#@bot.command()
-#async def ping(ctx):
-#    await ctx.send('pong')
 
 @bot.command()
 async def play(ctx):
 	# grab the user who sent the command
     user = ctx.message.author
-    voice_channel = user.voice.voice_channel
-    channel = None
+    channel = user.voice.channel
 
     # only play music if user is in a voice channel
-    if voice_channel != None:
-        play_local_file('clockwork_unmixed.mp3', voice_channel)
+    if channel:
+        filename = None
+        if 'beat' in ctx.message.content:
+            filename = 'clockwork_unmixed.mp3'
 
-async def play_local_file(file_name, voice_channel):
-    # create StreamPlayer
-        channel = await client.join_voice_channel(voice_channel)
-        player = channel.create_ffmpeg_player(file_name)
-        player.start()
-        while not player.is_done():
-            await asyncio.sleep(1)
+        if filename:
+            await play_local_file_async(filename, channel, ctx.guild)
 
-        # disconnect after the player has finished
-        player.stop()
-        await channel.disconnect()
+
+@bot.command()
+async def stop(ctx):
+    voice = get(bot.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        voice.stop()
+
+
+async def play_local_file_async(file_name, channel, guild): 
+    voice = get(bot.voice_clients, guild=guild)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
+
+    source = FFmpegPCMAudio(file_name)
+    voice.play(source)
+
 
 bot.run('')
 
