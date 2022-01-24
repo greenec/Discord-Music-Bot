@@ -1,6 +1,6 @@
 
 import asyncio
-from discord import FFmpegPCMAudio
+from discord import FFmpegOpusAudio
 from discord.ext import commands
 from discord.utils import get
 
@@ -37,7 +37,7 @@ async def play_local_file_async(file_name, channel, guild):
     else:
         voice = await channel.connect()
 
-    source = FFmpegPCMAudio(file_name)
+    source = FFmpegOpusAudio(file_name)
     voice.play(source)
 
 
