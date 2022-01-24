@@ -3,6 +3,8 @@ import asyncio
 from discord import FFmpegOpusAudio
 from discord.ext import commands
 from discord.utils import get
+from dotenv import load_dotenv
+import os
 
 bot = commands.Bot(command_prefix='-')
 
@@ -41,5 +43,8 @@ async def play_local_file_async(file_name, channel, guild):
     voice.play(source)
 
 
-bot.run('')
+load_dotenv()
+token = os.getenv('DISCORD_TOKEN')
+
+bot.run(token)
 
