@@ -33,7 +33,7 @@ async def stop(ctx):
         voice.stop()
 
 
-async def join_voice_channel_async(guild, channel)
+async def join_voice_channel_async(guild, channel):
     voice = get(bot.voice_clients, guild=guild)
     if voice and voice.is_connected():
         await voice.move_to(channel)
@@ -43,7 +43,10 @@ async def join_voice_channel_async(guild, channel)
 
 
 async def play_local_file_async(file_name, channel, guild): 
-	voice = await join_voice_channel_async(guild, channel)
+    voice = await join_voice_channel_async(guild, channel)
+
+    if voice.is_playing():
+        voice.stop()
 
     source = FFmpegOpusAudio(file_name)
     voice.play(source)
