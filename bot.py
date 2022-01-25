@@ -14,12 +14,14 @@ bot = commands.Bot(command_prefix='-')
 async def play(ctx):
 	# get the user who sent the command
     user = ctx.message.author
+    if not user.voice:
+        return
     channel = user.voice.channel
 
     # only play music if the user is in a voice channel
     if channel:
         filename = None
-        if 'beat' in ctx.message.content:
+        if 'beat' in ctx.message.content.lower():
             filename = 'clockwork_unmixed.mp3'
 
         if filename:
