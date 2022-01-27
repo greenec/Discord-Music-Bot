@@ -1,5 +1,6 @@
 
 import asyncio
+import discord
 from discord import FFmpegOpusAudio
 from discord.ext import commands
 from discord.utils import get
@@ -7,7 +8,8 @@ from dotenv import load_dotenv
 import os
 
 
-bot = commands.Bot(command_prefix='-')
+activity = discord.Activity(type=discord.ActivityType.watching, name='for -play')
+bot = commands.Bot(command_prefix='-', activity=activity)
 
 
 @bot.command()
