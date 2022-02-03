@@ -6,7 +6,10 @@ from discord.ext import commands
 from discord.utils import get
 from dotenv import load_dotenv
 import os
+from yt_dlp import YoutubeDL
 
+
+audio_dir = '/tmp/workingaudio'
 
 activity = discord.Activity(type=discord.ActivityType.watching, name='for -play')
 bot = commands.Bot(command_prefix='-', activity=activity)
@@ -28,6 +31,13 @@ async def play(ctx):
 
         if filename:
             await play_local_file_async(filename, channel, ctx.guild)
+        else:
+            # no pre-programmed sounds matched. playing from YouTube
+            url = ctx.message.content.replace('-play ', '')
+            download_youtube_audio(audio_dir, url)
+            audio_file = os.path.join(audio_dir, os.listdir(audio_dir)[0])
+
+            await play_local_file_async(audio_file, channel, ctx.guild)
 
 
 @bot.command()
@@ -69,6 +79,21 @@ async def play_local_file_async(file_name, channel, guild):
     while voice and voice.is_playing():
         await asyncio.sleep(60)
     await voice.disconnect()
+
+
+def download_youtube_audio(audio_dir, url):
+    # remove existing files in working directory
+    clear_working_directory(audio_dir)
+
+    ydl_opts = { 'format': 'bestaudio', 'paths': { 'home': audio_dir } }
+    with YoutubeDL(ydl_opts) as ydl:
+        ret = ydl.download([ url ])
+
+
+def clear_working_directory(audio_dir):
+    if os.path.isdir(audio_dir):
+        for f in os.listdir(audio_dir):
+            os.remove(os.path.join(audio_dir, f))
 
 
 def main():
