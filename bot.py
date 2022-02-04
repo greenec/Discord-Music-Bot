@@ -86,8 +86,14 @@ def download_youtube_audio(audio_dir, url):
     clear_working_directory(audio_dir)
 
     ydl_opts = { 'format': 'bestaudio', 'paths': { 'home': audio_dir } }
-    with YoutubeDL(ydl_opts) as ydl:
-        ret = ydl.download([ url ])
+    try:
+        ydl_opts = { 'format': 'bestaudio', 'paths': { 'home': audio_dir } }
+        with YoutubeDL(ydl_opts) as ydl:
+            ret = ydl.download([ url ])
+    except:
+        ydl_opts['default_search'] = 'gvsearch'
+        with YoutubeDL(ydl_opts) as ydl:
+            ret = ydl.download([ url ])
 
 
 def clear_working_directory(audio_dir):
