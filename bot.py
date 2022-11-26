@@ -92,7 +92,7 @@ def download_youtube_audio(audio_dir, url):
         with YoutubeDL(ydl_opts) as ydl:
             ret = ydl.download([ url ])
     except:
-        ydl_opts['default_search'] = 'gvsearch'
+        ydl_opts['default_search'] = 'ytsearch'
         with YoutubeDL(ydl_opts) as ydl:
             ret = ydl.download([ url ])
 
