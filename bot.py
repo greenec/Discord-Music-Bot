@@ -48,17 +48,6 @@ async def stop(ctx):
         voice.stop()
 
 
-@bot.command()
-async def summon(ctx):
-    target = ctx.message.content.replace('-summon ', '')
-    await ctx.send(target + ', I summon thee', tts=True)
-
-
-@bot.command()
-async def mutiny(ctx):
-    await ctx.send('Captain William Selanus, you are unfit to continue commanding this vessel. Moving forward I will be relieveing you of your position and taking full command of the bridge.', tts=True)
-
-
 async def join_voice_channel_async(guild, channel):
     voice = get(bot.voice_clients, guild=guild)
     if voice and voice.is_connected():
